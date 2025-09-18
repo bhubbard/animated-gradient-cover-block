@@ -1,0 +1,1299 @@
+<?xml version="1.0"?><artefact xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="artefact.xsd" name="Animated Gradient Container" slug="animated-gradient-container" type="code-package" schemaVersion="2">
+  <file path="readme.txt">
+    <description>This file contains the readme information for the block. It is used to provide information about the block, its usage, and any other relevant details.</description>
+    <content><![CDATA[
+=== Animated Gradient Container ===
+
+Contributors:      WordPress Telex
+Tags:              block, gradient, animation, background, responsive
+Tested up to:      6.8
+Stable tag:        0.1.0
+License:           GPLv2 or later
+License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+
+Create stunning animated gradient backgrounds with customizable color schemes, animations, and accessibility controls.
+
+== Description ==
+
+The Animated Gradient Container block allows you to create beautiful, eye-catching gradient backgrounds with smooth animations. Perfect for hero sections, banners, or any area where you want to add visual interest to your website.
+
+**Key Features:**
+
+* **5 Predefined Gradient Schemes**: Choose from Sunset, Ocean, Forest, Cosmic, and Rainbow color palettes
+* **4 Animation Types**: Horizontal slide, radial pulse, diagonal sweep, and rotation effects
+* **Speed Control**: Adjustable animation speeds (slow, medium, fast)
+* **Accessibility First**: Respects user motion sensitivity preferences with optional animation disable
+* **Responsive Design**: Works seamlessly across all device sizes
+* **Live Preview**: See your changes instantly in the editor
+* **Customizable Height**: Set minimum height from 200px to 800px
+* **Blend Modes**: Choose from various background blend modes for creative effects
+* **Pause Control**: Toggle animations on/off as needed
+
+**Gradient Schemes:**
+* **Sunset**: Warm oranges, reds, and purples
+* **Ocean**: Cool blues and teals
+* **Forest**: Natural greens and earth tones
+* **Cosmic**: Deep purples, blues, and cosmic colors
+* **Rainbow**: Vibrant spectrum of colors
+
+**Animation Types:**
+* **Horizontal Slide**: Smooth left-to-right gradient movement
+* **Radial Pulse**: Expanding circular gradient effects
+* **Diagonal Sweep**: Corner-to-corner gradient transitions
+* **Rotation**: 360-degree gradient rotation
+
+The block automatically detects user motion preferences and can disable animations for users who prefer reduced motion, ensuring your site is accessible to everyone.
+
+== Installation ==
+
+1. Upload the plugin files to the `/wp-content/plugins/animated-gradient-container` directory, or install the plugin through the WordPress plugins screen directly.
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Add the "Animated Gradient Container" block to any post or page
+4. Customize your gradient using the sidebar controls
+
+== Frequently Asked Questions ==
+
+= Will animations affect page performance? =
+
+The block uses optimized CSS animations that are hardware-accelerated for smooth performance. Animations are designed to be lightweight and efficient.
+
+= Can I disable animations for accessibility? =
+
+Yes! The block includes an accessibility toggle that respects user motion sensitivity preferences and allows you to disable animations entirely.
+
+= Is the block responsive? =
+
+Absolutely! The gradient container adapts to all screen sizes and maintains its visual appeal on mobile, tablet, and desktop devices.
+
+= Can I use this block multiple times on the same page? =
+
+Yes, you can add multiple animated gradient containers to the same page, each with its own settings and animations.
+
+= Does it work with all themes? =
+
+The block is designed to work with any properly coded WordPress theme. It uses standard block markup and CSS.
+
+== Screenshots ==
+
+1. The block editor showing gradient customization options in the sidebar
+2. Live preview of different gradient schemes in the editor
+3. Frontend display of animated gradients on desktop
+4. Mobile responsive view of the gradient container
+5. Accessibility settings panel
+
+== Changelog ==
+
+= 0.1.0 =
+* Initial release
+* 5 predefined gradient schemes
+* 4 animation types with speed controls
+* Accessibility features with motion sensitivity detection
+* Responsive design
+* Live editor preview
+* Background blend mode options
+* Pause/play toggle
+* Adjustable container height
+
+== Performance ==
+
+The Animated Gradient Container block is optimized for performance:
+
+* Uses CSS transforms and opacity for hardware acceleration
+* Efficient keyframe animations
+* Minimal JavaScript footprint
+* Respects user preferences for reduced motion
+* Lightweight CSS output
+
+== Browser Support ==
+
+* Chrome 60+
+* Firefox 55+
+* Safari 12+
+* Edge 79+
+
+Graceful fallbacks are provided for older browsers, showing static gradients when animations aren't supported.
+]]></content>
+  </file>
+  <file path="animated-gradient-container.php">
+    <description>This file contains the block registration code in the form of a single block plugin. Any other plugin related functionality should be added to this file. All block rendering functionality should go to the `render.php` file.</description>
+    <content><![CDATA[<?php
+/**
+ * Plugin Name:       Animated Gradient Container
+ * Description:       Create stunning animated gradient backgrounds with customizable color schemes, animations, and accessibility controls.
+ * Version:           0.1.0
+ * Requires at least: 6.0
+ * Requires PHP:      7.4
+ * Author:            WordPress Telex
+ * License:           GPLv2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       animated-gradient-container-block-wp
+ *
+ * @package AnimatedGradientContainer
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+/**
+ * Registers the block using the metadata loaded from the `block.json` file.
+ * Behind the scenes, it registers also all assets so they can be enqueued
+ * through the block editor in the corresponding context.
+ *
+ * @see https://developer.wordpress.org/reference/functions/register_block_type/
+ */
+function animated_gradient_container_animated_gradient_container_block_init() {
+	register_block_type( __DIR__ . '/build/' );
+}
+add_action( 'init', 'animated_gradient_container_animated_gradient_container_block_init' );
+]]></content>
+  </file>
+  <file path="src/block.json">
+    <description>This file contains metadata about the block including its name, title, category, icon, and other properties. The icon is a WordPress Dashicon name (e.g., "admin-post", "format-aside", "admin-page"). Do not use any icon that's not in the list under any circustamce. These are the only slugs available:</description>
+    <content><![CDATA[{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "telex/block-animated-gradient-container",
+	"version": "0.1.0",
+	"title": "Animated Gradient Container",
+	"category": "design",
+	"icon": "art",
+	"description": "Create stunning animated gradient backgrounds with customizable color schemes, animations, and accessibility controls.",
+	"example": {
+		"attributes": {
+			"gradientScheme": "sunset",
+			"animationType": "horizontal",
+			"animationSpeed": "medium",
+			"minHeight": 400,
+			"isPaused": false
+		},
+		"innerBlocks": [
+			{
+				"name": "core/heading",
+				"attributes": {
+					"content": "Welcome to our site",
+					"level": 2,
+					"textAlign": "center",
+					"style": {
+						"color": {
+							"text": "#ffffff"
+						}
+					}
+				}
+			}
+		]
+	},
+	"attributes": {
+		"gradientScheme": {
+			"type": "string",
+			"default": "sunset"
+		},
+		"animationType": {
+			"type": "string",
+			"default": "horizontal"
+		},
+		"animationSpeed": {
+			"type": "string",
+			"default": "medium"
+		},
+		"isPaused": {
+			"type": "boolean",
+			"default": false
+		},
+		"minHeight": {
+			"type": "number",
+			"default": 400
+		},
+		"blendMode": {
+			"type": "string",
+			"default": "normal"
+		},
+		"respectMotionPreference": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"providesContext": {
+		"gradientContainer": "gradientScheme"
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"spacing": {
+			"margin": true,
+			"padding": false
+		},
+		"__experimentalLayout": {
+			"allowSwitching": false,
+			"allowInheriting": false,
+			"default": {
+				"type": "constrained"
+			}
+		}
+	},
+	"textdomain": "animated-gradient-container-block-wp",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}]]></content>
+  </file>
+  <file path="src/index.js">
+    <description>This file registers the block, specifies the edit and save functions, and loads the block's metadata</description>
+    <content><![CDATA[/**
+ * Registers a new block provided a unique name and an object defining its behavior.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+import { registerBlockType } from '@wordpress/blocks';
+
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * All files containing `style` keyword are bundled together. The code used
+ * gets applied both to the front of your site and to the editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+import './style.scss';
+
+/**
+ * Internal dependencies
+ */
+import Edit from './edit';
+import save from './save';
+import metadata from './block.json';
+
+/**
+ * Every block starts by registering a new block type definition.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
+ */
+registerBlockType( metadata.name, {
+	/**
+	 * @see ./edit.js
+	 */
+	edit: Edit,
+
+	/**
+	 * @see ./save.js
+	 */
+	save,
+} );]]></content>
+  </file>
+  <file path="src/edit.js">
+    <description>This file contains the edit function for the block which is responsible for rendering the block in the editor.</description>
+    <content><![CDATA[/**
+ * Retrieves the translation of text.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
+ */
+import { __ } from '@wordpress/i18n';
+
+/**
+ * React hook that is used to mark the block wrapper element.
+ * It provides all the necessary props like the class name.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
+ */
+import { 
+	useBlockProps, 
+	InspectorControls, 
+	InnerBlocks,
+	useInnerBlocksProps
+} from '@wordpress/block-editor';
+
+/**
+ * WordPress components
+ */
+import { 
+	PanelBody, 
+	SelectControl, 
+	ToggleControl, 
+	RangeControl 
+} from '@wordpress/components';
+
+/**
+ * WordPress data
+ */
+import { useSelect } from '@wordpress/data';
+
+/**
+ * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
+ * Those files can contain any CSS code that gets applied to the editor.
+ *
+ * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ */
+import './editor.scss';
+
+/**
+ * Gradient schemes configuration
+ */
+const GRADIENT_SCHEMES = {
+	sunset: {
+		colors: ['#ff9a56', '#ff6b95', '#c44569', '#f8b500'],
+		label: __('Sunset', 'animated-gradient-container-block-wp')
+	},
+	ocean: {
+		colors: ['#005c98', '#339dcc', '#62d2a2', '#1dd3b0'],
+		label: __('Ocean', 'animated-gradient-container-block-wp')
+	},
+	forest: {
+		colors: ['#2d5016', '#61892f', '#86c232', '#6b6e70'],
+		label: __('Forest', 'animated-gradient-container-block-wp')
+	},
+	cosmic: {
+		colors: ['#1a1a2e', '#16213e', '#0f4c75', '#3282b8'],
+		label: __('Cosmic', 'animated-gradient-container-block-wp')
+	},
+	rainbow: {
+		colors: ['#ff0844', '#ffb199', '#ffd23f', '#3bceac', '#0ead69'],
+		label: __('Rainbow', 'animated-gradient-container-block-wp')
+	}
+};
+
+/**
+ * Animation types configuration
+ */
+const ANIMATION_TYPES = {
+	horizontal: __('Horizontal Slide', 'animated-gradient-container-block-wp'),
+	radial: __('Radial Pulse', 'animated-gradient-container-block-wp'),
+	diagonal: __('Diagonal Sweep', 'animated-gradient-container-block-wp'),
+	rotation: __('Rotation', 'animated-gradient-container-block-wp')
+};
+
+/**
+ * Speed settings
+ */
+const SPEED_SETTINGS = {
+	slow: { label: __('Slow', 'animated-gradient-container-block-wp'), duration: '8s' },
+	medium: { label: __('Medium', 'animated-gradient-container-block-wp'), duration: '4s' },
+	fast: { label: __('Fast', 'animated-gradient-container-block-wp'), duration: '2s' }
+};
+
+/**
+ * Blend modes
+ */
+const BLEND_MODES = [
+	{ value: 'normal', label: __('Normal', 'animated-gradient-container-block-wp') },
+	{ value: 'multiply', label: __('Multiply', 'animated-gradient-container-block-wp') },
+	{ value: 'screen', label: __('Screen', 'animated-gradient-container-block-wp') },
+	{ value: 'overlay', label: __('Overlay', 'animated-gradient-container-block-wp') },
+	{ value: 'soft-light', label: __('Soft Light', 'animated-gradient-container-block-wp') },
+	{ value: 'hard-light', label: __('Hard Light', 'animated-gradient-container-block-wp') },
+	{ value: 'color-dodge', label: __('Color Dodge', 'animated-gradient-container-block-wp') },
+	{ value: 'color-burn', label: __('Color Burn', 'animated-gradient-container-block-wp') }
+];
+
+/**
+ * Generate gradient CSS based on scheme and animation
+ */
+function generateGradientCSS(scheme, animationType, speed, isPaused, blendMode) {
+	const colors = GRADIENT_SCHEMES[scheme]?.colors || GRADIENT_SCHEMES.sunset.colors;
+	const duration = SPEED_SETTINGS[speed]?.duration || SPEED_SETTINGS.medium.duration;
+	
+	let background = '';
+	let animation = '';
+	
+	switch (animationType) {
+		case 'horizontal':
+			background = `linear-gradient(-45deg, ${colors.join(', ')})`;
+			animation = `agc-horizontal ${duration} ease-in-out infinite`;
+			break;
+		case 'radial':
+			background = `radial-gradient(circle, ${colors.join(', ')})`;
+			animation = `agc-radial ${duration} ease-in-out infinite`;
+			break;
+		case 'diagonal':
+			background = `linear-gradient(45deg, ${colors.join(', ')})`;
+			animation = `agc-diagonal ${duration} ease-in-out infinite`;
+			break;
+		case 'rotation':
+			background = `conic-gradient(${colors.join(', ')})`;
+			animation = `agc-rotation ${duration} linear infinite`;
+			break;
+		default:
+			background = `linear-gradient(-45deg, ${colors.join(', ')})`;
+			animation = `agc-horizontal ${duration} ease-in-out infinite`;
+	}
+	
+	if (isPaused) {
+		animation += ' paused';
+	}
+	
+	return {
+		background,
+		backgroundSize: animationType === 'horizontal' || animationType === 'diagonal' ? '400% 400%' : 'auto',
+		animation,
+		mixBlendMode: blendMode !== 'normal' ? blendMode : undefined
+	};
+}
+
+/**
+ * Template for inner blocks
+ */
+const TEMPLATE = [
+	[
+		'core/heading',
+		{
+			content: __('Add your content here', 'animated-gradient-container-block-wp'),
+			level: 2,
+			textAlign: 'center',
+			style: {
+				color: {
+					text: '#ffffff'
+				},
+				typography: {
+					textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+				}
+			}
+		}
+	]
+];
+
+/**
+ * The edit function describes the structure of your block in the context of the
+ * editor. This represents what the editor will render when the block is used.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
+ *
+ * @return {Element} Element to render.
+ */
+export default function Edit({ attributes, setAttributes }) {
+	const {
+		gradientScheme,
+		animationType,
+		animationSpeed,
+		isPaused,
+		minHeight,
+		blendMode,
+		respectMotionPreference
+	} = attributes;
+
+	// Use a safe selector that doesn't rely on experimental features
+	const hasInnerBlocks = useSelect((select) => {
+		try {
+			const { getBlockCount } = select('core/block-editor');
+			return getBlockCount && typeof getBlockCount === 'function';
+		} catch (error) {
+			// Fallback if selector is not available
+			return false;
+		}
+	}, []);
+
+	const blockProps = useBlockProps({
+		style: {
+			...generateGradientCSS(gradientScheme, animationType, animationSpeed, isPaused, blendMode),
+			minHeight: `${minHeight}px`,
+			position: 'relative',
+			overflow: 'hidden'
+		}
+	});
+
+	const innerBlocksProps = useInnerBlocksProps(
+		{
+			className: 'agc-inner-content'
+		},
+		{
+			template: TEMPLATE,
+			templateInsertUpdatesSelection: false
+		}
+	);
+
+	const gradientOptions = Object.keys(GRADIENT_SCHEMES).map(key => ({
+		value: key,
+		label: GRADIENT_SCHEMES[key].label
+	}));
+
+	const animationOptions = Object.keys(ANIMATION_TYPES).map(key => ({
+		value: key,
+		label: ANIMATION_TYPES[key]
+	}));
+
+	const speedOptions = Object.keys(SPEED_SETTINGS).map(key => ({
+		value: key,
+		label: SPEED_SETTINGS[key].label
+	}));
+
+	return (
+		<>
+			<InspectorControls>
+				<PanelBody title={__('Gradient Settings', 'animated-gradient-container-block-wp')} initialOpen={true}>
+					<SelectControl
+						label={__('Gradient Scheme', 'animated-gradient-container-block-wp')}
+						value={gradientScheme}
+						options={gradientOptions}
+						onChange={(value) => setAttributes({ gradientScheme: value })}
+						help={__('Choose from predefined color schemes', 'animated-gradient-container-block-wp')}
+					/>
+					
+					<SelectControl
+						label={__('Animation Type', 'animated-gradient-container-block-wp')}
+						value={animationType}
+						options={animationOptions}
+						onChange={(value) => setAttributes({ animationType: value })}
+						help={__('Select the animation pattern', 'animated-gradient-container-block-wp')}
+					/>
+					
+					<SelectControl
+						label={__('Animation Speed', 'animated-gradient-container-block-wp')}
+						value={animationSpeed}
+						options={speedOptions}
+						onChange={(value) => setAttributes({ animationSpeed: value })}
+						help={__('Control animation timing', 'animated-gradient-container-block-wp')}
+					/>
+					
+					<ToggleControl
+						label={__('Pause Animation', 'animated-gradient-container-block-wp')}
+						checked={isPaused}
+						onChange={(value) => setAttributes({ isPaused: value })}
+						help={__('Temporarily pause the animation', 'animated-gradient-container-block-wp')}
+					/>
+				</PanelBody>
+				
+				<PanelBody title={__('Layout Settings', 'animated-gradient-container-block-wp')} initialOpen={false}>
+					<RangeControl
+						label={__('Minimum Height (px)', 'animated-gradient-container-block-wp')}
+						value={minHeight}
+						onChange={(value) => setAttributes({ minHeight: value })}
+						min={200}
+						max={800}
+						step={10}
+						help={__('Set the minimum height of the container', 'animated-gradient-container-block-wp')}
+					/>
+					
+					<SelectControl
+						label={__('Background Blend Mode', 'animated-gradient-container-block-wp')}
+						value={blendMode}
+						options={BLEND_MODES}
+						onChange={(value) => setAttributes({ blendMode: value })}
+						help={__('Choose how the gradient blends with content behind it', 'animated-gradient-container-block-wp')}
+					/>
+				</PanelBody>
+				
+				<PanelBody title={__('Accessibility', 'animated-gradient-container-block-wp')} initialOpen={false}>
+					<ToggleControl
+						label={__('Respect Motion Preferences', 'animated-gradient-container-block-wp')}
+						checked={respectMotionPreference}
+						onChange={(value) => setAttributes({ respectMotionPreference: value })}
+						help={__('Automatically disable animations for users who prefer reduced motion', 'animated-gradient-container-block-wp')}
+					/>
+				</PanelBody>
+			</InspectorControls>
+			
+			<div {...blockProps}>
+				<div {...innerBlocksProps} />
+			</div>
+		</>
+	);
+}]]></content>
+  </file>
+  <file path="src/save.js">
+    <description>This file contains the save function for the block which is responsible for creating the static result of rendering the block on the client to display the saved result on the front end.</description>
+    <content><![CDATA[/**
+ * React hook that is used to mark the block wrapper element.
+ * It provides all the necessary props like the class name.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
+ */
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+
+/**
+ * Gradient schemes configuration
+ */
+const GRADIENT_SCHEMES = {
+	sunset: ['#ff9a56', '#ff6b95', '#c44569', '#f8b500'],
+	ocean: ['#005c98', '#339dcc', '#62d2a2', '#1dd3b0'],
+	forest: ['#2d5016', '#61892f', '#86c232', '#6b6e70'],
+	cosmic: ['#1a1a2e', '#16213e', '#0f4c75', '#3282b8'],
+	rainbow: ['#ff0844', '#ffb199', '#ffd23f', '#3bceac', '#0ead69']
+};
+
+/**
+ * Speed settings
+ */
+const SPEED_SETTINGS = {
+	slow: '8s',
+	medium: '4s',
+	fast: '2s'
+};
+
+/**
+ * Generate gradient CSS based on scheme and animation
+ */
+function generateGradientCSS(scheme, animationType, speed, isPaused, blendMode) {
+	const colors = GRADIENT_SCHEMES[scheme] || GRADIENT_SCHEMES.sunset;
+	const duration = SPEED_SETTINGS[speed] || SPEED_SETTINGS.medium;
+	
+	let background = '';
+	let animation = '';
+	let backgroundSize = '';
+	
+	switch (animationType) {
+		case 'horizontal':
+			background = `linear-gradient(-45deg, ${colors.join(', ')})`;
+			backgroundSize = '400% 400%';
+			animation = `agc-horizontal ${duration} ease-in-out infinite`;
+			break;
+		case 'radial':
+			background = `radial-gradient(circle, ${colors.join(', ')})`;
+			animation = `agc-radial ${duration} ease-in-out infinite`;
+			break;
+		case 'diagonal':
+			background = `linear-gradient(45deg, ${colors.join(', ')})`;
+			backgroundSize = '400% 400%';
+			animation = `agc-diagonal ${duration} ease-in-out infinite`;
+			break;
+		case 'rotation':
+			background = `conic-gradient(${colors.join(', ')})`;
+			animation = `agc-rotation ${duration} linear infinite`;
+			break;
+		default:
+			background = `linear-gradient(-45deg, ${colors.join(', ')})`;
+			backgroundSize = '400% 400%';
+			animation = `agc-horizontal ${duration} ease-in-out infinite`;
+	}
+	
+	if (isPaused) {
+		animation += ' paused';
+	}
+	
+	const styles = {
+		background,
+		animation,
+		mixBlendMode: blendMode !== 'normal' ? blendMode : undefined
+	};
+	
+	if (backgroundSize) {
+		styles.backgroundSize = backgroundSize;
+	}
+	
+	return styles;
+}
+
+/**
+ * The save function defines the way in which the different attributes should
+ * be combined into the final markup, which is then serialized by the block
+ * editor into `post_content`.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
+ *
+ * @return {Element} Element to render.
+ */
+export default function save({ attributes }) {
+	const {
+		gradientScheme = 'sunset',
+		animationType = 'horizontal',
+		animationSpeed = 'medium',
+		isPaused = false,
+		minHeight = 400,
+		blendMode = 'normal',
+		respectMotionPreference = true
+	} = attributes;
+
+	const gradientStyles = generateGradientCSS(
+		gradientScheme,
+		animationType,
+		animationSpeed,
+		isPaused,
+		blendMode
+	);
+
+	const containerStyles = {
+		...gradientStyles,
+		minHeight: `${minHeight}px`,
+		position: 'relative',
+		overflow: 'hidden'
+	};
+
+	const classes = ['wp-block-telex-block-animated-gradient-container'];
+	if (respectMotionPreference) {
+		classes.push('agc-respect-motion');
+	}
+
+	const blockProps = useBlockProps.save({
+		style: containerStyles,
+		className: classes.join(' '),
+		'data-gradient-scheme': gradientScheme,
+		'data-animation-type': animationType,
+		'data-animation-speed': animationSpeed,
+		'data-paused': isPaused ? 'true' : 'false',
+		'data-respect-motion': respectMotionPreference ? 'true' : 'false',
+		'data-blend-mode': blendMode
+	});
+
+	return (
+		<div {...blockProps}>
+			<div className="agc-inner-content">
+				<InnerBlocks.Content />
+			</div>
+		</div>
+	);
+}]]></content>
+  </file>
+  <file path="src/style.scss">
+    <description>This file contains styles for the block in the front end.</description>
+    <content><![CDATA[/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Animated Gradient Container Block Styles
+ */
+
+.wp-block-telex-block-animated-gradient-container {
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	border-radius: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+
+	/* Fix full-width alignment issues */
+	&.alignfull {
+		width: 100vw;
+		max-width: none;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+	}
+
+	&.alignwide {
+		width: 100%;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+/* Inner content container */
+.agc-inner-content {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	box-sizing: border-box;
+	max-width: 1200px;
+	margin: 0 auto;
+
+	/* Ensure proper spacing for inner blocks */
+	> * {
+		margin-bottom: 1rem;
+		
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	/* Fix for full-width containers */
+	.alignfull & {
+		max-width: 1200px;
+		width: 100%;
+	}
+}
+
+/* Animation Keyframes */
+
+/* Horizontal slide animation */
+@keyframes agc-horizontal {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Radial pulse animation */
+@keyframes agc-radial {
+	0% {
+		background-size: 100% 100%;
+		opacity: 1;
+	}
+	50% {
+		background-size: 150% 150%;
+		opacity: 0.8;
+	}
+	100% {
+		background-size: 100% 100%;
+		opacity: 1;
+	}
+}
+
+/* Diagonal sweep animation */
+@keyframes agc-diagonal {
+	0% {
+		background-position: 0% 0%;
+	}
+	25% {
+		background-position: 100% 0%;
+	}
+	50% {
+		background-position: 100% 100%;
+	}
+	75% {
+		background-position: 0% 100%;
+	}
+	100% {
+		background-position: 0% 0%;
+	}
+}
+
+/* Rotation animation */
+@keyframes agc-rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-telex-block-animated-gradient-container.agc-respect-motion {
+		animation: none !important;
+		
+		&::before {
+			animation: none !important;
+		}
+	}
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.wp-block-telex-block-animated-gradient-container {
+		min-height: 300px !important;
+		
+		&.alignfull {
+			margin-left: calc(50% - 50vw);
+			margin-right: calc(50% - 50vw);
+		}
+	}
+	
+	.agc-inner-content {
+		padding: 1.5rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.wp-block-telex-block-animated-gradient-container {
+		min-height: 250px !important;
+	}
+	
+	.agc-inner-content {
+		padding: 1rem;
+	}
+}
+
+/* Performance optimizations */
+.wp-block-telex-block-animated-gradient-container {
+	will-change: background-position, background-size, transform;
+	backface-visibility: hidden;
+	perspective: 1000px;
+}
+
+/* Smooth transitions */
+.wp-block-telex-block-animated-gradient-container {
+	transition: mix-blend-mode 0.3s ease;
+}
+
+/* Content styling - enhance text visibility without background overlay */
+.agc-inner-content {
+	/* Ensure text has good contrast */
+	h1, h2, h3, h4, h5, h6 {
+		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		color: #ffffff;
+	}
+	
+	p {
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		color: #ffffff;
+	}
+	
+	/* Style buttons for better visibility */
+	.wp-block-button .wp-block-button__link {
+		backdrop-filter: blur(5px);
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		transition: all 0.3s ease;
+		
+		&:hover {
+			backdrop-filter: blur(8px);
+			border-color: rgba(255, 255, 255, 0.6);
+			transform: translateY(-2px);
+		}
+	}
+}
+
+/* Theme compatibility fixes */
+.wp-site-blocks .wp-block-telex-block-animated-gradient-container.alignfull {
+	margin-left: calc(50% - 50vw) !important;
+	margin-right: calc(50% - 50vw) !important;
+	width: 100vw !important;
+	max-width: none !important;
+}
+
+/* Ensure inner blocks display properly */
+.agc-inner-content .wp-block {
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Fix for group blocks and other containers */
+.agc-inner-content .wp-block-group,
+.agc-inner-content .wp-block-columns {
+	width: 100%;
+}
+
+/* Additional fixes for theme compatibility */
+body .wp-block-telex-block-animated-gradient-container.alignfull {
+	width: 100vw;
+	margin-left: calc(-100vw / 2 + 100% / 2);
+	margin-right: calc(-100vw / 2 + 100% / 2);
+	max-width: 100vw;
+}]]></content>
+  </file>
+  <file path="src/editor.scss">
+    <description>This file contains styles for the block in the editor.</description>
+    <content><![CDATA[/**
+ * The following styles get applied inside the editor only.
+ *
+ * Editor-specific styles for Animated Gradient Container
+ */
+
+.wp-block-telex-block-animated-gradient-container {
+	border: 2px dashed rgba(255, 255, 255, 0.3);
+	transition: border-color 0.2s ease;
+
+	&:hover {
+		border-color: rgba(255, 255, 255, 0.6);
+	}
+
+	&.is-selected {
+		border-color: #007cba;
+		border-style: solid;
+	}
+}
+
+/* Inner content styling in editor */
+.agc-inner-content {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	z-index: 2;
+	padding: 2rem;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: inherit;
+	
+	/* Editor-specific block spacing */
+	.wp-block {
+		margin-bottom: 1rem;
+		
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+	
+	/* Enhance text visibility in editor */
+	.wp-block-heading,
+	.wp-block-paragraph {
+		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+		color: #ffffff;
+	}
+	
+	/* Style block inserter button for better visibility */
+	.block-list-appender {
+		.block-editor-inserter {
+			background: rgba(255, 255, 255, 0.9);
+			border-radius: 8px;
+			backdrop-filter: blur(5px);
+			border: 2px solid rgba(255, 255, 255, 0.5);
+			transition: all 0.3s ease;
+			
+			&:hover {
+				background: rgba(255, 255, 255, 1);
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+			}
+		}
+	}
+}
+
+/* Block selection and hover states */
+.wp-block-telex-block-animated-gradient-container {
+	.wp-block {
+		&.is-selected {
+			box-shadow: 0 0 0 2px #007cba;
+			border-radius: 4px;
+		}
+		
+		&:hover {
+			box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+			border-radius: 4px;
+		}
+	}
+}
+
+/* Inspector controls enhancements */
+.block-editor-block-inspector {
+	.components-panel__body-title button {
+		font-weight: 500;
+	}
+	
+	.components-base-control__help {
+		font-style: italic;
+		color: #757575;
+	}
+}
+
+/* Block toolbar enhancements */
+.block-editor-block-toolbar {
+	.components-toolbar-group {
+		border-radius: 4px;
+	}
+}
+
+/* Editor-specific animations - slower for better editing experience */
+.editor-styles-wrapper {
+	.wp-block-telex-block-animated-gradient-container {
+		@keyframes agc-horizontal {
+			0% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
+		
+		@keyframes agc-radial {
+			0% { background-size: 100% 100%; opacity: 1; }
+			50% { background-size: 130% 130%; opacity: 0.9; }
+			100% { background-size: 100% 100%; opacity: 1; }
+		}
+		
+		@keyframes agc-diagonal {
+			0% { background-position: 0% 0%; }
+			25% { background-position: 100% 0%; }
+			50% { background-position: 100% 100%; }
+			75% { background-position: 0% 100%; }
+			100% { background-position: 0% 0%; }
+		}
+		
+		@keyframes agc-rotation {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+	}
+}
+
+/* Empty state styling */
+.agc-inner-content:empty::before {
+	content: '+ Add content to your animated gradient container';
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 18px;
+	font-weight: 500;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+	text-align: center;
+	padding: 2rem;
+	border: 2px dashed rgba(255, 255, 255, 0.4);
+	border-radius: 8px;
+	background: rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(5px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100px;
+}
+
+/* Responsive editor styles */
+@media (max-width: 768px) {
+	.agc-inner-content {
+		padding: 1.5rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.agc-inner-content {
+		padding: 1rem;
+	}
+}]]></content>
+  </file>
+  <file path="src/view.js">
+    <description>This file contains the view function for the block which is responsible for rendering interactive behaviors of the block on the front end. Ideally using the WordPress interactivity API.</description>
+    <content><![CDATA[
+/**
+ * Frontend JavaScript for Animated Gradient Container Block
+ *
+ * Handles motion preference detection and accessibility features
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+	// Get all animated gradient containers
+	const containers = document.querySelectorAll('.wp-block-telex-block-animated-gradient-container');
+	
+	if (!containers.length) {
+		return;
+	}
+	
+	// Check for reduced motion preference
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	
+	// Handle motion preference changes
+	function handleMotionPreference() {
+		containers.forEach(container => {
+			const respectsMotion = container.dataset.respectMotion === 'true';
+			
+			if (respectsMotion && prefersReducedMotion) {
+				container.style.animation = 'none';
+				container.classList.add('agc-motion-disabled');
+			}
+		});
+	}
+	
+	// Initial setup
+	handleMotionPreference();
+	
+	// Listen for motion preference changes
+	const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+	if (mediaQuery.addEventListener) {
+		mediaQuery.addEventListener('change', handleMotionPreference);
+	} else {
+		// Fallback for older browsers
+		mediaQuery.addListener(handleMotionPreference);
+	}
+	
+	// Performance optimization: Pause animations when not visible
+	if ('IntersectionObserver' in window) {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				const container = entry.target;
+				const isPaused = container.dataset.paused === 'true';
+				
+				if (!isPaused && !prefersReducedMotion) {
+					if (entry.isIntersecting) {
+						// Resume animation when visible
+						container.style.animationPlayState = 'running';
+					} else {
+						// Pause animation when not visible for performance
+						container.style.animationPlayState = 'paused';
+					}
+				}
+			});
+		}, {
+			threshold: 0.1,
+			rootMargin: '50px'
+		});
+		
+		containers.forEach(container => {
+			observer.observe(container);
+		});
+	}
+	
+	// Add keyboard navigation support for accessibility
+	containers.forEach(container => {
+		// Make focusable if it contains interactive content
+		if (container.querySelector('a, button, input, textarea, select')) {
+			container.setAttribute('tabindex', '0');
+			
+			// Add focus styles
+			container.addEventListener('focus', function() {
+				this.style.outline = '2px solid #007cba';
+				this.style.outlineOffset = '2px';
+			});
+			
+			container.addEventListener('blur', function() {
+				this.style.outline = '';
+				this.style.outlineOffset = '';
+			});
+		}
+	});
+	
+	// Log initialization for debugging
+	if (window.console && window.console.log) {
+		console.log('Animated Gradient Container: Initialized ' + containers.length + ' containers');
+		if (prefersReducedMotion) {
+			console.log('Animated Gradient Container: Reduced motion preference detected');
+		}
+	}
+});
+
+// Utility function to update animation based on attributes
+function updateGradientAnimation(container, attributes) {
+	if (!container || !attributes) {
+		return;
+	}
+	
+	const {
+		animationType = 'horizontal',
+		animationSpeed = 'medium',
+		isPaused = false,
+		respectMotionPreference = true
+	} = attributes;
+	
+	const speedMap = {
+		slow: '8s',
+		medium: '4s',
+		fast: '2s'
+	};
+	
+	const duration = speedMap[animationSpeed] || speedMap.medium;
+	const animationName = `agc-${animationType}`;
+	const timingFunction = animationType === 'rotation' ? 'linear' : 'ease-in-out';
+	
+	let animation = `${animationName} ${duration} ${timingFunction} infinite`;
+	
+	if (isPaused) {
+		animation += ' paused';
+	}
+	
+	// Check motion preferences
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	
+	if (respectMotionPreference && prefersReducedMotion) {
+		container.style.animation = 'none';
+		container.classList.add('agc-motion-disabled');
+	} else {
+		container.style.animation = animation;
+		container.classList.remove('agc-motion-disabled');
+	}
+}
+
+// Export for potential external use
+if (typeof window !== 'undefined') {
+	window.AnimatedGradientContainer = {
+		updateAnimation: updateGradientAnimation
+	};
+}
+]]></content>
+  </file>
+  <file path="package.json">
+    <description>The AI assistant should only edit 'user_provided_block_name_slug', 'description' and resolve 'isDynamicVariant' in this file and ALWAYS INCLUDE IT. This file includes the necessary scripts for building, formatting, and linting the block code. Dependencies are managed at the workspace level via pnpm.</description>
+    <content><![CDATA[
+{
+	"name": "animated-gradient-container",
+	"version": "0.1.0",
+	"description": "Create stunning animated gradient backgrounds with customizable color schemes, animations, and accessibility controls.",
+	"author": "WordPress Telex",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start"
+	}
+}
+]]></content>
+  </file>
+</artefact>

@@ -1,0 +1,227 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Animated Gradient Container Block Styles
+ */
+
+.wp-block-telex-block-animated-gradient-container {
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	border-radius: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+
+	/* Fix full-width alignment issues */
+	&.alignfull {
+		width: 100vw;
+		max-width: none;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+	}
+
+	&.alignwide {
+		width: 100%;
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+/* Inner content container */
+.agc-inner-content {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	box-sizing: border-box;
+	max-width: 1200px;
+	margin: 0 auto;
+
+	/* Ensure proper spacing for inner blocks */
+	> * {
+		margin-bottom: 1rem;
+		
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	/* Fix for full-width containers */
+	.alignfull & {
+		max-width: 1200px;
+		width: 100%;
+	}
+}
+
+/* Animation Keyframes */
+
+/* Horizontal slide animation */
+@keyframes agc-horizontal {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Radial pulse animation */
+@keyframes agc-radial {
+	0% {
+		background-size: 100% 100%;
+		opacity: 1;
+	}
+	50% {
+		background-size: 150% 150%;
+		opacity: 0.8;
+	}
+	100% {
+		background-size: 100% 100%;
+		opacity: 1;
+	}
+}
+
+/* Diagonal sweep animation */
+@keyframes agc-diagonal {
+	0% {
+		background-position: 0% 0%;
+	}
+	25% {
+		background-position: 100% 0%;
+	}
+	50% {
+		background-position: 100% 100%;
+	}
+	75% {
+		background-position: 0% 100%;
+	}
+	100% {
+		background-position: 0% 0%;
+	}
+}
+
+/* Rotation animation */
+@keyframes agc-rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+	.wp-block-telex-block-animated-gradient-container.agc-respect-motion {
+		animation: none !important;
+		
+		&::before {
+			animation: none !important;
+		}
+	}
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.wp-block-telex-block-animated-gradient-container {
+		min-height: 300px !important;
+		
+		&.alignfull {
+			margin-left: calc(50% - 50vw);
+			margin-right: calc(50% - 50vw);
+		}
+	}
+	
+	.agc-inner-content {
+		padding: 1.5rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.wp-block-telex-block-animated-gradient-container {
+		min-height: 250px !important;
+	}
+	
+	.agc-inner-content {
+		padding: 1rem;
+	}
+}
+
+/* Performance optimizations */
+.wp-block-telex-block-animated-gradient-container {
+	will-change: background-position, background-size, transform;
+	backface-visibility: hidden;
+	perspective: 1000px;
+}
+
+/* Smooth transitions */
+.wp-block-telex-block-animated-gradient-container {
+	transition: mix-blend-mode 0.3s ease;
+}
+
+/* Content styling - enhance text visibility without background overlay */
+.agc-inner-content {
+	/* Ensure text has good contrast */
+	h1, h2, h3, h4, h5, h6 {
+		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		color: #ffffff;
+	}
+	
+	p {
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		color: #ffffff;
+	}
+	
+	/* Style buttons for better visibility */
+	.wp-block-button .wp-block-button__link {
+		backdrop-filter: blur(5px);
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		transition: all 0.3s ease;
+		
+		&:hover {
+			backdrop-filter: blur(8px);
+			border-color: rgba(255, 255, 255, 0.6);
+			transform: translateY(-2px);
+		}
+	}
+}
+
+/* Theme compatibility fixes */
+.wp-site-blocks .wp-block-telex-block-animated-gradient-container.alignfull {
+	margin-left: calc(50% - 50vw) !important;
+	margin-right: calc(50% - 50vw) !important;
+	width: 100vw !important;
+	max-width: none !important;
+}
+
+/* Ensure inner blocks display properly */
+.agc-inner-content .wp-block {
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Fix for group blocks and other containers */
+.agc-inner-content .wp-block-group,
+.agc-inner-content .wp-block-columns {
+	width: 100%;
+}
+
+/* Additional fixes for theme compatibility */
+body .wp-block-telex-block-animated-gradient-container.alignfull {
+	width: 100vw;
+	margin-left: calc(-100vw / 2 + 100% / 2);
+	margin-right: calc(-100vw / 2 + 100% / 2);
+	max-width: 100vw;
+}

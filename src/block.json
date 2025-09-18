@@ -1,0 +1,87 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "telex/block-animated-gradient-container",
+	"version": "0.1.0",
+	"title": "Animated Gradient Container",
+	"category": "design",
+	"icon": "art",
+	"description": "Create stunning animated gradient backgrounds with customizable color schemes, animations, and accessibility controls.",
+	"example": {
+		"attributes": {
+			"gradientScheme": "sunset",
+			"animationType": "horizontal",
+			"animationSpeed": "medium",
+			"minHeight": 400,
+			"isPaused": false
+		},
+		"innerBlocks": [
+			{
+				"name": "core/heading",
+				"attributes": {
+					"content": "Welcome to our site",
+					"level": 2,
+					"textAlign": "center",
+					"style": {
+						"color": {
+							"text": "#ffffff"
+						}
+					}
+				}
+			}
+		]
+	},
+	"attributes": {
+		"gradientScheme": {
+			"type": "string",
+			"default": "sunset"
+		},
+		"animationType": {
+			"type": "string",
+			"default": "horizontal"
+		},
+		"animationSpeed": {
+			"type": "string",
+			"default": "medium"
+		},
+		"isPaused": {
+			"type": "boolean",
+			"default": false
+		},
+		"minHeight": {
+			"type": "number",
+			"default": 400
+		},
+		"blendMode": {
+			"type": "string",
+			"default": "normal"
+		},
+		"respectMotionPreference": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"providesContext": {
+		"gradientContainer": "gradientScheme"
+	},
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"spacing": {
+			"margin": true,
+			"padding": false
+		},
+		"__experimentalLayout": {
+			"allowSwitching": false,
+			"allowInheriting": false,
+			"default": {
+				"type": "constrained"
+			}
+		}
+	},
+	"textdomain": "animated-gradient-container-block-wp",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}
